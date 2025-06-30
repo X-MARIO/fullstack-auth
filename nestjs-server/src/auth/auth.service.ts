@@ -1,17 +1,20 @@
-import {ConflictException, Injectable, InternalServerErrorException} from '@nestjs/common'
-import {Request} from 'express'
+import {
+	ConflictException,
+	Injectable,
+	InternalServerErrorException
+} from '@nestjs/common'
+import { Request } from 'express'
 
-import {RegisterDto} from '@/auth/dto'
-import {UserService} from '@/user/user.service'
+import { RegisterDto } from '@/auth/dto'
+import { UserService } from '@/user/user.service'
 
-import {AuthMethod, User} from '../../generated/prisma'
+import { AuthMethod, User } from '../../generated/prisma'
 
 @Injectable()
 export class AuthService {
 	public constructor(private readonly userService: UserService) {}
 
 	public async register(req: Request, dto: RegisterDto) {
-		console.log('>> dto', dto);
 		const isExists = await this.userService.findBEmail(dto.email)
 
 		if (isExists) {
@@ -29,31 +32,41 @@ export class AuthService {
 			false
 		)
 
-		return newUser;
+		// Прямой вызов обновленного метода
+		const sessionData = await this.saveSession(req, newUser)
+		return sessionData
 	}
 	public async login() {}
 
 	public async logout() {}
 
-	public async saveSession(req: Request, user: User) {
-		console.log('>> user', user);
-		return new Promise((resolve, reject) => {
-			console.log('>> user', user);
-			req.session.userId = user.id
+	/**
+	 * Сохраняет данные пользователя в сессии.
+	 * @param req - Объект запроса Express
+	 * @param user - Объект пользователя для сохранения
+	 * @returns Промис, который разрешается с объектом пользователя
+	 */
+	public async saveSession(
+		req: Request,
+		user: User
+	): Promise<{ user: User }> {
+		req.session.userId = user.id
 
+		// Оборачиваем callback-based save в промис для async/await
+		await new Promise<void>((resolve, reject) => {
 			req.session.save(err => {
 				if (err) {
+					console.error('Session save error:', err)
 					return reject(
 						new InternalServerErrorException(
 							'Не удалось сохранить сессию. Проверьте, правильно ли настроены параметры сессии.'
 						)
 					)
 				}
-
-				resolve({
-					user
-				})
+				resolve()
 			})
 		})
+
+		return { user }
 	}
 }
