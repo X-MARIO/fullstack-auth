@@ -18,7 +18,7 @@ async function bootstrap() {
 
 	app.use(cookieParser(config.getOrThrow<string>('COOKIE_SECRET')))
 
-	app.use(
+	app.useGlobalPipes(
 		new ValidationPipe({
 			transform: true
 		})
