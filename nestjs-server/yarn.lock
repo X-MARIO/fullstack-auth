@@ -3904,13 +3904,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"connect-redis@npm:9.0.0":
-  version: 9.0.0
-  resolution: "connect-redis@npm:9.0.0"
+"connect-redis@npm:7.1.1":
+  version: 7.1.1
+  resolution: "connect-redis@npm:7.1.1"
   peerDependencies:
     express-session: ">=1"
-    redis: ">=5"
-  checksum: 10c0/85616db0760f7974ed14f0676488dab168c111ae2068fae645a8b1acd0acf72d3c57d2252deb50eff662c22db72a6028e1635d9ff8450f3cac853278aa64051a
+  checksum: 10c0/eeb9e275176d1ef973c808df7c860c80300dfdecdee1a8ca20524fc4e37ccb2206923b07f17501fb7235cde73e9db9e06dff79ef17a54e5a57f35db247ec99fb
   languageName: node
   linkType: hard
 
@@ -7725,7 +7724,7 @@ __metadata:
     argon2: "npm:0.43.0"
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.14.2"
-    connect-redis: "npm:9.0.0"
+    connect-redis: "npm:7.1.1"
     cookie-parser: "npm:1.4.7"
     eslint: "npm:9.29.0"
     eslint-config-prettier: "npm:10.1.5"

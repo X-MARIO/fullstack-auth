@@ -40,44 +40,24 @@ services:
     networks:
       - backend
 
-  redis:
-    container_name: redis
-    image: redis:latest
+  redis-stack:
+    container_name: redis-stack
+    image: redis/redis-stack:latest
     restart: always
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
-      INSIGHT_WEB_PORT: ${INSIGHT_WEB_PORT}
     ports:
-      - "6379:6379"
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+      - "6379:6379" # Порт для Redis
+      - "8001:8001" # Порт для Redis Insight
+    environment:
+      - REDIS_ARGS=--requirepass ${REDIS_PASSWORD}
     volumes:
-      - redis_data:/data
+      - redis_stack_data:/data
     networks:
       - backend
-
-  redisinsight:
-    container_name: redisinsight
-    image: redis/redisinsight:latest
-    restart: always
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: ${REDIS_PORT}
-      REDISINSIGHT_HOST: ${REDISINSIGHT_HOST}
-      REDISINSIGHT_ACCEPT_LICENSE: ${REDISINSIGHT_ACCEPT_LICENSE}
-    ports:
-      - "5540:5540"
-    volumes:
-      - redisinsight_data:/db
-    networks:
-      - backend
-    depends_on:
-      - redis
 
 volumes:
   postgres_data:
   pgadmin_data:
-  redis_data:
-  redisinsight_data:
+  redis_stack_data:
 
 networks:
   backend:
