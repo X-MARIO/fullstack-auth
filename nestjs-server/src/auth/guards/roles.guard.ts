@@ -4,10 +4,9 @@ import {
 	ForbiddenException
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import { UserRole } from 'generated/prisma'
 
 import { ROLES_KEY } from '@/auth/decorators'
-
-import { UserRole } from '../../../generated/prisma'
 
 export class RolesGuard implements CanActivate {
 	public constructor(private readonly reflector: Reflector) {}
@@ -19,7 +18,7 @@ export class RolesGuard implements CanActivate {
 		])
 		const request = context.switchToHttp().getRequest()
 
-		if (!roles) return false
+		if (!roles) return true
 
 		if (!roles.includes(request.user.role)) {
 			throw new ForbiddenException(
