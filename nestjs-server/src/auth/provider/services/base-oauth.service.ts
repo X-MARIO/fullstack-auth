@@ -4,9 +4,8 @@ import {
 	UnauthorizedException
 } from '@nestjs/common'
 
-import { TypeUserInfo } from '@/auth/provider/services/types'
-
 import { TypeBaseProviderOptions } from './types/base-provider-options.types'
+import { TypeUserInfo } from './types/user-info.types'
 
 @Injectable()
 export class BaseOAuthService {
@@ -26,7 +25,7 @@ export class BaseOAuthService {
 			response_type: 'code',
 			client_id: this.options.client_id,
 			redirect_uri: this.getRedirectUrl(),
-			scope: (this.options.scopes ?? []).join(''),
+			scope: (this.options.scopes ?? []).join(' '),
 			access_type: 'offline',
 			prompt: 'select_account'
 		})
@@ -46,7 +45,7 @@ export class BaseOAuthService {
 			grant_type: 'authorization_code'
 		})
 
-		const tokenRequest = await fetch(this.options.access_url, {
+		const tokensRequest = await fetch(this.options.access_url, {
 			method: 'POST',
 			body: tokenQuery,
 			headers: {
@@ -55,7 +54,13 @@ export class BaseOAuthService {
 			}
 		})
 
-		const tokens = await tokenRequest.json()
+		if (!tokensRequest.ok) {
+			throw new BadRequestException(
+				`Не удалось получить пользователя с ${this.options.profile_url}. Проверьте правильность токена доступа.`
+			)
+		}
+
+		const tokens = await tokensRequest.json()
 
 		if (!tokens.access_token) {
 			throw new BadRequestException(
@@ -91,23 +96,23 @@ export class BaseOAuthService {
 		return `${this.BASE_URL}/auth/oauth/callback/${this.options.name}`
 	}
 
-	public set baseUrl(baseUrl: string) {
-		this.BASE_URL = baseUrl
+	set baseUrl(value: string) {
+		this.BASE_URL = value
 	}
 
-	public get name() {
+	get name() {
 		return this.options.name
 	}
 
-	public get access_url() {
+	get access_url() {
 		return this.options.access_url
 	}
 
-	public get profile_url() {
+	get profile_url() {
 		return this.options.profile_url
 	}
 
-	public get scopes() {
+	get scopes() {
 		return this.options.scopes
 	}
 }

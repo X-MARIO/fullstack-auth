@@ -16,18 +16,18 @@ import { ConfigService } from '@nestjs/config'
 import { Recaptcha } from '@nestlab/google-recaptcha'
 import { Request, Response } from 'express'
 
-import { LoginDto, RegisterDto } from '@/auth/dto'
-import { AuthProviderGuard } from '@/auth/guards'
-import { ProviderService } from '@/auth/provider/provider.service'
-
 import { AuthService } from './auth.service'
+import { LoginDto } from './dto/login.dto'
+import { RegisterDto } from './dto/register.dto'
+import { AuthProviderGuard } from './guards/provider.guard'
+import { ProviderService } from './provider/provider.service'
 
 @Controller('auth')
 export class AuthController {
 	public constructor(
 		private readonly authService: AuthService,
-		private readonly providerService: ProviderService,
-		private readonly configService: ConfigService
+		private readonly configService: ConfigService,
+		private readonly providerService: ProviderService
 	) {}
 
 	@Recaptcha()
@@ -70,8 +70,14 @@ export class AuthController {
 	public async connect(@Param('provider') provider: string) {
 		const providerInstance = this.providerService.findByService(provider)
 
+		if (!providerInstance) {
+			throw new BadRequestException(
+				'Не был предоставлен код авторизации.'
+			)
+		}
+
 		return {
-			url: providerInstance?.getAuthUrl()
+			url: providerInstance.getAuthUrl()
 		}
 	}
 
