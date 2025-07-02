@@ -1,11 +1,13 @@
 import {
 	CanActivate,
 	ExecutionContext,
+	Injectable,
 	UnauthorizedException
 } from '@nestjs/common'
 
 import { UserService } from '@/user/user.service'
 
+@Injectable()
 export class AuthGuard implements CanActivate {
 	public constructor(private readonly userService: UserService) {}
 

@@ -4,7 +4,7 @@ import * as process from 'node:process'
 
 dotenv.config()
 
-export const isDevUtil = (configService: ConfigService) => {
+export const isDev = (configService: ConfigService) => {
 	return configService.getOrThrow('NODE_ENV') === 'development'
 }
 
