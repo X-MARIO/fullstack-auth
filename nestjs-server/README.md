@@ -100,3 +100,4 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 ## Good info
 https://github.com/rafi021/redis-redisinsight-docker-compose/
 https://github.com/temirlannz/nestjs-session-auth
+https://my.selectel.ru
