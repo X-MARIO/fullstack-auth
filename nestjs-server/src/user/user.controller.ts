@@ -1,16 +1,8 @@
 import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common'
 
+import { Authorization, Authorized } from '@/auth/decorators'
 
-
-import { Authorization, Authorized } from '@/auth/decorators';
-
-
-
-import { UserService } from './user.service';
-
-
-
-
+import { UserService } from './user.service'
 
 @Controller('users')
 export class UserController {

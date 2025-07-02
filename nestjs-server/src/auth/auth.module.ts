@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha'
+import { getRecaptchaConfig } from 'src/configs'
 
-import { getRecaptchaConfig } from '@/config'
 import { UserService } from '@/user/user.service'
 
 import { AuthController } from './auth.controller'

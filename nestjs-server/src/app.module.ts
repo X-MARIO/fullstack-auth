@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 
+import { ProviderModule } from '@/auth/provider/provider.module'
 import { IS_DEV_ENV } from '@/libs/common/utils'
 
 import { AuthModule } from './auth/auth.module'
@@ -15,7 +16,8 @@ import { UserModule } from './user/user.module'
 		}),
 		PrismaModule,
 		UserModule,
-		AuthModule
+		AuthModule,
+		ProviderModule
 	],
 	controllers: [],
 	providers: []
