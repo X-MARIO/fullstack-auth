@@ -12,6 +12,7 @@ import { Request, Response } from 'express'
 import { AuthMethod, User } from 'generated/prisma'
 
 import { LoginDto, RegisterDto } from '@/auth/dto'
+import { EmailConfirmationService } from '@/auth/email-confirmation/email-confirmation.service'
 import { PrismaService } from '@/prisma/prisma.service'
 import { UserService } from '@/user/user.service'
 
@@ -23,11 +24,12 @@ export class AuthService {
 		private readonly userService: UserService,
 		private readonly configService: ConfigService,
 		private readonly providerService: ProviderService,
-		private readonly prismaService: PrismaService
+		private readonly prismaService: PrismaService,
+		private readonly emailConfirmationService: EmailConfirmationService
 	) {}
 
 	public async register(req: Request, dto: RegisterDto) {
-		const isExists = await this.userService.findBEmail(dto.email)
+		const isExists = await this.userService.findByEmail(dto.email)
 
 		if (isExists) {
 			throw new ConflictException(
@@ -44,12 +46,15 @@ export class AuthService {
 			false
 		)
 
-		// Прямой вызов обновленного метода
-		const sessionData = await this.saveSession(req, newUser)
-		return sessionData
+		await this.emailConfirmationService.sendVerificationToken(newUser.email)
+
+		return {
+			message:
+				'Вы успешно зарегистрировались. Пожалуйста, подтвердите ваш email. Сообщение было отправлено на ваш почтовый адрес.'
+		}
 	}
 	public async login(req: Request, dto: LoginDto) {
-		const user = await this.userService.findBEmail(dto.email)
+		const user = await this.userService.findByEmail(dto.email)
 
 		if (!user || !user.password) {
 			throw new NotFoundException(

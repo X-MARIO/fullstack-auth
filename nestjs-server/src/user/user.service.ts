@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { hash } from 'argon2'
-import { $Enums } from 'generated/prisma'
 
 import { PrismaService } from '@/prisma/prisma.service'
 
-import AuthMethod = $Enums.AuthMethod
+import { AuthMethod } from '../../generated/prisma'
 
 @Injectable()
 export class UserService {
@@ -20,15 +19,16 @@ export class UserService {
 			}
 		})
 
-		if (!user)
+		if (!user) {
 			throw new NotFoundException(
-				'Пользователь не наёден. Пожалуйста, проверьте введёные данные.'
+				'Пользователь не найден. Пожалуйста, проверьте введенные данные.'
 			)
+		}
 
 		return user
 	}
 
-	public async findBEmail(email: string) {
+	public async findByEmail(email: string) {
 		const user = await this.prismaService.user.findUnique({
 			where: {
 				email
