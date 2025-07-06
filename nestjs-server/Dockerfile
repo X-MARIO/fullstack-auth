@@ -31,7 +31,7 @@ WORKDIR /app
 # Устанавливаем системные зависимости
 RUN apk add --no-cache libc6-compat
 
-# ❗ ВОТ ИСПРАВЛЕНИЕ: Активируем нужную версию Yarn
+# Активируем нужную версию Yarn
 RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
 # Копируем только необходимые для production-установки файлы из этапа сборки
@@ -43,7 +43,7 @@ RUN yarn workspaces focus --all --production
 
 # Копируем собранный код и сгенерированный клиент Prisma
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/generated ./dist/generated
+# ✅ Копируем клиент из стандартного места в node_modules
 COPY --from=build /app/node_modules/.prisma/client ./node_modules/.prisma/client
 COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
 
