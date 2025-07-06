@@ -70,6 +70,15 @@ export class AuthService {
 			)
 		}
 
+		if (!user.isVerified) {
+			await this.emailConfirmationService.sendVerificationToken(
+				user.email
+			)
+			throw new UnauthorizedException(
+				'Ваш email не подтвержден. Пожалуйста, проверьте вашу почту и подтвердите адрес.'
+			)
+		}
+
 		return this.saveSession(req, user)
 	}
 
