@@ -4,6 +4,10 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
+RUN corepack enable && corepack prepare yarn@4.9.1 --activate
+
+RUN yarn --version
+
 COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile
