@@ -10,13 +10,13 @@ RUN yarn --version
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --immutable
 
 FROM base as build
 
 COPY . .
 
-RUN yarn prisma generate
+RUN yarn run prisma generate
 
 RUN yarn build
 
@@ -28,7 +28,7 @@ WORKDIR /app
 
 COPY --from=build /app/package.json /app/yarn.lock
 
-RUN yarn install --producvtion  --frozen-lockfile
+RUN yarn install --producvtion --immutable
 
 COPY --from=build /app/dist ./dist
 
