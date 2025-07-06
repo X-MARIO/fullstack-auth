@@ -16,6 +16,8 @@ FROM base as build
 
 COPY . .
 
+RUN ls
+
 RUN yarn run prisma generate
 
 RUN yarn build
