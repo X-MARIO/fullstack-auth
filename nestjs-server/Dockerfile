@@ -8,17 +8,16 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
-# Копируем package.json, устанавливаем ВСЕ зависимости (включая dev-зависимости, как prisma)
+# Копируем package.json, устанавливаем ВСЕ зависимости
+# (включая devDependencies и tsconfig-paths)
 COPY package.json yarn.lock* .yarnrc.yml* ./
 RUN yarn install --immutable
 
 # Копируем остальной код
 COPY . .
 
-# Генерируем клиент Prisma
+# Генерируем клиент Prisma и собираем проект
 RUN yarn prisma generate
-
-# Собираем проект
 RUN yarn build
 
 # ---
@@ -34,18 +33,19 @@ RUN apk add --no-cache libc6-compat
 # Активируем нужную версию Yarn
 RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
-# Копируем только необходимые для production-установки файлы из этапа сборки
+# Копируем только необходимые для production-установки файлы
 COPY --from=build /app/package.json /app/yarn.lock* /app/.yarnrc.yml* ./
 COPY --from=build /app/.yarn ./.yarn
 
 # Устанавливаем ТОЛЬКО production-зависимости
+# tsconfig-paths будет установлен, так как мы добавили его в 'dependencies'
 RUN yarn workspaces focus --all --production
 
-# Копируем собранный код и сгенерированный клиент Prisma
+# Копируем собранный код, tsconfig для путей и сгенерированный клиент Prisma
 COPY --from=build /app/dist ./dist
-# ✅ Копируем клиент из стандартного места в node_modules
-COPY --from=build /app/node_modules/.prisma/client ./node_modules/.prisma/client
+COPY --from=build /app/tsconfig.json ./tsconfig.json
+COPY --from=build /app/generated ./generated
 COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
 
-# Запускаем приложение
-CMD ["node", "dist/main.js"]
+# ✅ Запускаем приложение через tsconfig-paths/register, чтобы Node.js понимал пути
+CMD ["node", "-r", "tsconfig-paths/register", "dist/main.js"]

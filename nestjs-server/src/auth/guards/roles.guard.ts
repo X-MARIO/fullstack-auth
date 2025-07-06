@@ -4,7 +4,7 @@ import {
 	ForbiddenException
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { UserRole } from 'generated/prisma'
+import { UserRole } from '@prisma/__generated__'
 
 import { ROLES_KEY } from '@/auth/decorators'
 
