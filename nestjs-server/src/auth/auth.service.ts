@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { verify } from 'argon2'
 import { Request, Response } from 'express'
-import { AuthMethod, User } from '../../generated/prisma'
+import { AuthMethod, User } from 'generated/prisma'
 
 import { LoginDto, RegisterDto } from '@/auth/dto'
 import { EmailConfirmationService } from '@/auth/email-confirmation/email-confirmation.service'

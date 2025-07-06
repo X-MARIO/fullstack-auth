@@ -6,13 +6,13 @@ import {
 	NotFoundException
 } from '@nestjs/common'
 import { Request } from 'express'
+import { TokenType } from 'generated/prisma'
 import { v4 as uuidv4 } from 'uuid'
 
 import { MailService } from '@/libs/mail/mail.service'
 import { PrismaService } from '@/prisma/prisma.service'
 import { UserService } from '@/user/user.service'
 
-import { TokenType } from '../../../generated/prisma'
 import { AuthService } from '../auth.service'
 
 import { ConfirmationDto } from './dto/confirmation.dto'
