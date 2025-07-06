@@ -1,41 +1,49 @@
-FROM node:22.17.0-alpine as base
+# --- Этап 1: Сборка приложения ---
+FROM node:22.17.0-alpine AS build
 
+# Устанавливаем системные зависимости
 RUN apk add --no-cache libc6-compat
 
+# Устанавливаем Yarn
 WORKDIR /app
-
 RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
-RUN yarn --version
-
-COPY package.json yarn.lock ./
-
+# Копируем package.json, устанавливаем ВСЕ зависимости (включая dev-зависимости, как prisma)
+# Prisma должна быть в devDependencies в вашем package.json
+COPY package.json yarn.lock* .yarnrc.yml* ./
 RUN yarn install --immutable
 
-FROM base as build
-
+# Копируем остальной исходный код приложения
 COPY . .
 
-RUN ls
-
-RUN yarn add global prisma
-
+# Генерируем клиент Prisma (Yarn v4 сам найдет бинарник в зависимостях)
 RUN yarn prisma generate
 
+# Собираем проект
 RUN yarn build
 
-FROM base as production
+# ---
+# Этап 2: Финальный образ для production ---
+FROM node:22.17.0-alpine AS production
 
 ENV NODE_ENV=production
-
 WORKDIR /app
 
-COPY --from=build /app/package.json /app/yarn.lock
+# Устанавливаем системные зависимости
+RUN apk add --no-cache libc6-compat
 
+# Копируем только необходимые для production-установки файлы из этапа сборки
+COPY --from=build /app/package.json /app/yarn.lock* /app/.yarnrc.yml* ./
+COPY --from=build /app/.yarn ./.yarn
+
+# Устанавливаем ТОЛЬКО production-зависимости
 RUN yarn workspaces focus --all --production
 
+# Копируем собранный код и сгенерированный клиент Prisma
 COPY --from=build /app/dist ./dist
+# Используем стандартный путь для Prisma Client
+COPY --from=build /app/node_modules/.prisma/client ./node_modules/.prisma/client
+COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
 
-COPY --from=build /app/generated ./generated
-
-CMD ["node", "dist/main"]
+# Запускаем приложение
+CMD ["node", "dist/main.js"]
