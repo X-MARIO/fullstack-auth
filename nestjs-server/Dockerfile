@@ -43,6 +43,7 @@ RUN yarn workspaces focus --all --production
 
 # Копируем собранный код и сгенерированный клиент Prisma
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/generated ./dist/generated
 COPY --from=build /app/node_modules/.prisma/client ./node_modules/.prisma/client
 COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
 
