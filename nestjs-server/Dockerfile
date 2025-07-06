@@ -18,6 +18,8 @@ COPY . .
 
 # Генерируем клиент Prisma и собираем проект
 RUN yarn prisma generate
+
+# Сборка проекта
 RUN yarn build
 
 # ---
@@ -38,14 +40,14 @@ COPY --from=build /app/package.json /app/yarn.lock* /app/.yarnrc.yml* ./
 COPY --from=build /app/.yarn ./.yarn
 
 # Устанавливаем ТОЛЬКО production-зависимости
-# tsconfig-paths будет установлен, так как мы добавили его в 'dependencies'
+# tsconfig-paths будет установлен, так как он в 'dependencies'
 RUN yarn workspaces focus --all --production
 
 # Копируем собранный код, tsconfig для путей и сгенерированный клиент Prisma
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/tsconfig.json ./tsconfig.json
-COPY --from=build /app/generated ./generated
-COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
+# ✅ ИСПРАВЛЕНИЕ: Копируем всю папку prisma, так как generated теперь внутри нее
+COPY --from=build /app/prisma ./prisma
 
 # ✅ Запускаем приложение через tsconfig-paths/register, чтобы Node.js понимал пути
-CMD ["node", "-r", "tsconfig-paths/register", "dist/main.js"]
+CMD ["node", "dist/main.js"]
