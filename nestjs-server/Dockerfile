@@ -28,7 +28,7 @@ WORKDIR /app
 
 COPY --from=build /app/package.json /app/yarn.lock
 
-RUN yarn install --producvtion --immutable
+RUN yarn install --production --immutable
 
 COPY --from=build /app/dist ./dist
 
