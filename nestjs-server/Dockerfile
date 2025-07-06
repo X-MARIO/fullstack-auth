@@ -18,7 +18,7 @@ COPY . .
 
 RUN ls
 
-yarn add global prisma
+RUN yarn add global prisma
 
 RUN yarn prisma generate
 
