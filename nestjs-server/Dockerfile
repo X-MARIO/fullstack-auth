@@ -36,6 +36,6 @@ RUN yarn install --production --immutable
 
 COPY --from=build /app/dist ./dist
 
-COPY --from=build /app/prisma/__generated__ ./prisma/__generated__
+COPY --from=build /app/generated ./generated
 
 CMD ["node", "dist/main"]
