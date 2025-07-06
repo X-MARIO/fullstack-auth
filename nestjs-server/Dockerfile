@@ -9,14 +9,13 @@ WORKDIR /app
 RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
 # Копируем package.json, устанавливаем ВСЕ зависимости (включая dev-зависимости, как prisma)
-# Prisma должна быть в devDependencies в вашем package.json
 COPY package.json yarn.lock* .yarnrc.yml* ./
 RUN yarn install --immutable
 
-# Копируем остальной исходный код приложения
+# Копируем остальной код
 COPY . .
 
-# Генерируем клиент Prisma (Yarn v4 сам найдет бинарник в зависимостях)
+# Генерируем клиент Prisma
 RUN yarn prisma generate
 
 # Собираем проект
@@ -32,6 +31,9 @@ WORKDIR /app
 # Устанавливаем системные зависимости
 RUN apk add --no-cache libc6-compat
 
+# ❗ ВОТ ИСПРАВЛЕНИЕ: Активируем нужную версию Yarn
+RUN corepack enable && corepack prepare yarn@4.9.1 --activate
+
 # Копируем только необходимые для production-установки файлы из этапа сборки
 COPY --from=build /app/package.json /app/yarn.lock* /app/.yarnrc.yml* ./
 COPY --from=build /app/.yarn ./.yarn
@@ -41,7 +43,6 @@ RUN yarn workspaces focus --all --production
 
 # Копируем собранный код и сгенерированный клиент Prisma
 COPY --from=build /app/dist ./dist
-# Используем стандартный путь для Prisma Client
 COPY --from=build /app/node_modules/.prisma/client ./node_modules/.prisma/client
 COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
 
