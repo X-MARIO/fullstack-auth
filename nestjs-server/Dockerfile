@@ -32,7 +32,7 @@ WORKDIR /app
 
 COPY --from=build /app/package.json /app/yarn.lock
 
-RUN yarn install --production --immutable
+RUN yarn workspaces focus --all --production
 
 COPY --from=build /app/dist ./dist
 
