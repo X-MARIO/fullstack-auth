@@ -16,6 +16,6 @@ export const getMailerConfig = async (
 		}
 	},
 	defaults: {
-		from: `"TeaCoder Team" ${configService.getOrThrow<string>('MAIL_LOGIN')}`
+		from: `user@chekushkin-pavel.ru`
 	}
 })
