@@ -1,0 +1,23 @@
+# Dependencies
+node_modules
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Local Environment
+.env.local
+.env.*.local
+
+# Next.js build outputs
+.next
+dist
+out
+
+# Misc
+.DS_Store
+*.pem
+*.log
