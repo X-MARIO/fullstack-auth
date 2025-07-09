@@ -58,3 +58,48 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 nestjs-server/node_modules
 nestjs-server/dist
 nestjs-server/.idea
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+nextjs-clientg/.pnp
+nextjs-client/.pnp.*
+nextjs-client/.yarn/*
+nextjs-client/!.yarn/patches
+nextjs-client/!.yarn/plugins
+nextjs-client/!.yarn/releases
+nextjs-client/!.yarn/versions
+
+# testing
+nextjs-client/coverage
+
+# next.js
+nextjs-client/.next/
+nextjs-client/out/
+
+# production
+nextjs-client/build
+
+# misc
+nextjs-client/.DS_Store
+nextjs-client/*.pem
+
+# debug
+nextjs-client/npm-debug.log*
+nextjs-client/yarn-debug.log*
+nextjs-client/yarn-error.log*
+nextjs-client/.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+nextjs-client/.env*
+
+# vercel
+nextjs-client/.vercel
+
+# typescript
+nextjs-client/*.tsbuildinfo
+nextjs-client/next-env.d.ts
+
+nextjs-client/node_modules
+nextjs-client/dist
+nextjs-client/.idea
