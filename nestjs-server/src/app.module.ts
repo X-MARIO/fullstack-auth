@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config'
 import { EmailConfirmationModule } from '@/auth/email-confirmation/email-confirmation.module'
 import { PasswordRecoveryModule } from '@/auth/password-recovery/password-recovery.module'
 import { ProviderModule } from '@/auth/provider/provider.module'
+import { TwoFactorAuthModule } from '@/auth/two-factor-auth/two-factor-auth.module'
 import { IS_DEV_ENV } from '@/libs/common/utils'
 import { MailModule } from '@/libs/mail/mail.module'
 
@@ -23,7 +24,8 @@ import { UserModule } from './user/user.module'
 		ProviderModule,
 		MailModule,
 		EmailConfirmationModule,
-		PasswordRecoveryModule
+		PasswordRecoveryModule,
+		TwoFactorAuthModule
 	],
 	controllers: [],
 	providers: []

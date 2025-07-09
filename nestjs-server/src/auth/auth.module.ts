@@ -3,13 +3,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha'
 import { getRecaptchaConfig } from 'src/configs'
 
-import { EmailConfirmationModule } from '@/auth/email-confirmation/email-confirmation.module'
-import { ProviderModule } from '@/auth/provider/provider.module'
+import { TwoFactorAuthService } from '@/auth/two-factor-auth/two-factor-auth.service'
 import { getProvidersConfig } from '@/configs/providers.config'
+import { MailService } from '@/libs/mail/mail.service'
 import { UserService } from '@/user/user.service'
 
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
+import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module'
+import { ProviderModule } from './provider/provider.module'
 
 @Module({
 	imports: [
@@ -26,7 +28,7 @@ import { AuthService } from './auth.service'
 		forwardRef(() => EmailConfirmationModule)
 	],
 	controllers: [AuthController],
-	providers: [AuthService, UserService],
+	providers: [AuthService, UserService, MailService, TwoFactorAuthService],
 	exports: [AuthService]
 })
 export class AuthModule {}

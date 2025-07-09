@@ -30,11 +30,11 @@ export class AuthController {
 		private readonly providerService: ProviderService
 	) {}
 
-	// @Recaptcha()
+	@Recaptcha()
 	@Post('register')
 	@HttpCode(HttpStatus.OK)
-	public async register(@Req() req: Request, @Body() dto: RegisterDto) {
-		return this.authService.register(req, dto)
+	public async register(@Body() dto: RegisterDto) {
+		return this.authService.register(dto)
 	}
 
 	@Recaptcha()
@@ -69,12 +69,6 @@ export class AuthController {
 	@Get('/oauth/connect/:provider')
 	public async connect(@Param('provider') provider: string) {
 		const providerInstance = this.providerService.findByService(provider)
-
-		if (!providerInstance) {
-			throw new BadRequestException(
-				'Не был предоставлен код авторизации.'
-			)
-		}
 
 		return {
 			url: providerInstance.getAuthUrl()
