@@ -10,7 +10,6 @@ RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 # Копируем файлы, необходимые для установки зависимостей с помощью Yarn 4+
 # Это важно, так как Yarn Berry хранит бинарники и конфигурацию в репозитории
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn ./.yarn
 
 # Устанавливаем зависимости
 # Флаг --immutable гарантирует, что yarn.lock не будет изменен (аналог --frozen-lockfile)
