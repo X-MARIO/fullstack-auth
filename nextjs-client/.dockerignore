@@ -1,23 +1,15 @@
-# Dependencies
+# Локальные зависимости и артефакты сборки
 node_modules
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
-# Local Environment
-.env.local
-.env.*.local
-
-# Next.js build outputs
 .next
 dist
 out
 
-# Misc
+# Логи и файлы IDE
 .DS_Store
-*.pem
 *.log
+.idea
+.vscode
+
+# Локальные переменные окружения
+.env.local
+.env.*.local
