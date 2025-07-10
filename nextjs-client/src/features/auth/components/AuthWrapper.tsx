@@ -1,6 +1,7 @@
 import {PropsWithChildren} from "react";
 import {Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/shared/components/ui";
 import Link from "next/link";
+import {AuthSocial} from "@/features/auth/components/AuthSocial";
 
 interface AuthWrapperProps {
     readonly heading: string;
@@ -26,7 +27,7 @@ export const AuthWrapper: React.FC<AuthWrapperProps> = ({
             )}
         </CardHeader>
         <CardContent>
-            {isShowSocial && <div>Social</div>}
+            {isShowSocial && <AuthSocial />}
             {children}
         </CardContent>
         <CardFooter>
