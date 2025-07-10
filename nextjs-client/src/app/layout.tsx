@@ -1,6 +1,8 @@
-import {GeistSans} from 'geist/font/sans'
-import type {Metadata} from 'next'
+import { GeistSans } from 'geist/font/sans'
+import type { Metadata } from 'next'
 
+import { ToggleTheme } from '@/shared/components/ui'
+import { MainProvider } from '@/shared/providers'
 import '@/shared/styles/globals.css'
 
 export const metadata: Metadata = {
@@ -20,11 +22,14 @@ export default function RootLayout({
     return (
         <html lang='en'>
         <body className={GeistSans.variable}>
-        <div className='relative flex min-h-screen flex-col'>
-            <div className='flex h-screen w-full items-center justify-center px-4'>
-                {children}
+        <MainProvider>
+            <div className='relative flex min-h-screen flex-col'>
+                <ToggleTheme />
+                <div className='flex h-screen w-full items-center justify-center px-4'>
+                    {children}
+                </div>
             </div>
-        </div>
+        </MainProvider>
         </body>
         </html>
     )
