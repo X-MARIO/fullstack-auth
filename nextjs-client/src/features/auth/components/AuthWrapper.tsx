@@ -11,7 +11,7 @@ interface AuthWrapperProps {
     readonly isShowSocial?: boolean;
 }
 
-export const AuthWrapper: React.FC<AuthWrapperProps> = ({
+export const AuthWrapper = ({
                                                             children,
                                                             heading,
                                                             description,
